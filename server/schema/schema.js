@@ -54,6 +54,19 @@ const RootQuery = new GraphQLObjectType({
                 // Uses .find on the clients array, then matches the array from args, which is passed in, to the id of the client that exists within the array
                 return clients.find(client => client.id === args.id)
             }
+        },
+        projects: {
+            type: new GraphQLList(ProjectType),
+            resolve(parent, args) {
+                return projects
+            }
+        },
+        project: {
+            type: ProjectType,
+            args: { id: {type: GraphQLID}},
+            resolve(parents, args) {
+                return projects.find(project => project.id === args.id)
+            }
         }
     }
 })
