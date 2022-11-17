@@ -22,10 +22,17 @@ const ProjectType = new GraphQLObjectType({
     // 'fields' for the ProjectType is an anonymous function that returns an object
     fields: () => ({
         id: { type: GraphQLID },
-        clientId: { type: GraphQLID },
-        name: { type: GraphQLString },
+                name: { type: GraphQLString },
         description: { type: GraphQLString },
-        status: { type: GraphQLString }
+        status: { type: GraphQLString },
+        // The client is now a child of project, so we can query for information from the client in GtaphQL
+        client: {
+            type: ClientType,
+            resolve(parent, args) {
+                // This will use the parent's (project) data, which has clientID and will return the data for the matched client, so you can return name/email/phone with this linked section here
+                return clients.find(client => client.id === parent.clientId)
+            }
+        }
     })
 })
 
