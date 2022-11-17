@@ -2,7 +2,7 @@
 const { projects, clients } = require('../sampleData.js')
 
 // Bring in the things from graphql that we need to use and destructure them into their parts
-const { GraphQLObjectType, GraphQLID, GraphQLString, GraphQLSchema } = require('graphql')
+const { GraphQLObjectType, GraphQLID, GraphQLString, GraphQLSchema, GraphQLList } = require('graphql')
 
 // Client Type - GraphQL Object Type
 const ClientType = new GraphQLObjectType({
@@ -20,6 +20,15 @@ const RootQuery = new GraphQLObjectType({
     name: 'RootQueryType',
     // This fields for the RootQuery is an object that returns queries
     fields: {
+        // This defines the all clients query, which will return all of the data for all of the clients
+        clients: {
+            // The type we are looking for is a GraphQL List of CLient Types, so we have to specify that as the type
+            type: new GraphQLList(ClientType),
+            // Args are not needed, since we aren't passing in any ID or other arguments, since we are grabbing all of the clients
+            resolve(parent, args) {
+                return clients
+            }
+        },
         // This defines the client query
         client: {
             // It takes in a type, the client type, which we created above
