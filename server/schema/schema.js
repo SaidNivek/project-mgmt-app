@@ -1,6 +1,10 @@
 // Bring in the sampleData and destructure it for us to work with before the DB is set up in MongoDB
 const { projects, clients } = require('../sampleData.js')
 
+// Mongoose models
+const Project = require('../models/Project')
+const Client = require('../models/Client')
+
 // Bring in the things from graphql that we need to use and destructure them into their parts
 const { GraphQLObjectType, GraphQLID, GraphQLString, GraphQLSchema, GraphQLList } = require('graphql')
 
@@ -30,7 +34,8 @@ const ProjectType = new GraphQLObjectType({
             type: ClientType,
             resolve(parent, args) {
                 // This will use the parent's (project) data, which has clientID and will return the data for the matched client, so you can return name/email/phone with this linked section here
-                return clients.find(client => client.id === parent.clientId)
+                // It uses the mongoose method to do this (findById)
+                return Client.findById(parent.clientId)
             }
         }
     })
@@ -42,11 +47,12 @@ const RootQuery = new GraphQLObjectType({
     fields: {
         // This defines the all clients query, which will return all of the data for all of the clients
         clients: {
-            // The type we are looking for is a GraphQL List of CLient Types, so we have to specify that as the type
+            // The type we are looking for is a GraphQL List of Client Types, so we have to specify that as the type
             type: new GraphQLList(ClientType),
             // Args are not needed, since we aren't passing in any ID or other arguments, since we are grabbing all of the clients
             resolve(parent, args) {
-                return clients
+                // The mongoose schema of CLient that we built has a method of find, which we can use to bring in all of the Clients, if we don't specify anything here
+                return Client.find()
             }
         },
         // This defines the client query
@@ -58,21 +64,21 @@ const RootQuery = new GraphQLObjectType({
             args: { id: {type: GraphQLID}},
             // Our return goes into this resolver, which is a function that takes in a parent and args
             resolve(parent, args) {
-                // Uses .find on the clients array, then matches the array from args, which is passed in, to the id of the client that exists within the array
-                return clients.find(client => client.id === args.id)
+                // The mongoose schema of Client has a method findById, which will use the argument passed in to find the Client within the database that matches the argument passed in
+                return Client.findById(args.id)
             }
         },
         projects: {
             type: new GraphQLList(ProjectType),
             resolve(parent, args) {
-                return projects
+               return Project.find()
             }
         },
         project: {
             type: ProjectType,
             args: { id: {type: GraphQLID}},
             resolve(parents, args) {
-                return projects.find(project => project.id === args.id)
+                return Project.findById(args.id)
             }
         }
     }
