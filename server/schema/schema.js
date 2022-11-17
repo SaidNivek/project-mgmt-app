@@ -7,12 +7,25 @@ const { GraphQLObjectType, GraphQLID, GraphQLString, GraphQLSchema, GraphQLList 
 // Client Type - GraphQL Object Type
 const ClientType = new GraphQLObjectType({
     name: 'Client',
-    // This fields for the ClientType is an anonymous function that returns an object
+    // 'fields' for the ClientType is an anonymous function that returns an object
     fields: () => ({
         id: { type: GraphQLID },
         name: { type: GraphQLString },
         email: { type: GraphQLString },
         phone: { type: GraphQLString }
+    })
+})
+
+// Project Type - GraphQL Object Type
+const ProjectType = new GraphQLObjectType({
+    name: 'Project',
+    // 'fields' for the ProjectType is an anonymous function that returns an object
+    fields: () => ({
+        id: { type: GraphQLID },
+        clientId: { type: GraphQLID },
+        name: { type: GraphQLString },
+        description: { type: GraphQLString },
+        status: { type: GraphQLString }
     })
 })
 
