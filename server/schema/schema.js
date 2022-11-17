@@ -106,8 +106,20 @@ const mutation = new GraphQLObjectType({
                 // This will save the client, that was just defined above, to the DB
                 return client.save()
             }
-        }
-    }
+        },
+        // Delete client will delte it from the DB (Delete in CRUD fashion)
+        deleteClient: {
+            type: ClientType,
+            args: {
+                id: { type: GraphQLNonNull(GraphQLID) },
+            },
+            resolve(parent, args) {
+                // Instead of finding and returning, we are now going to find the client item and remove it from the database
+                return Client.findByIdAndRemove(args.id)
+            },
+        },
+
+    },
 })
 
 // In order to use the query, we need to export the schema
