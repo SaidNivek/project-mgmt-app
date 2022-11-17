@@ -3,7 +3,7 @@ const Project = require('../models/Project')
 const Client = require('../models/Client')
 
 // Bring in the things from graphql that we need to use and destructure them into their parts
-const { GraphQLObjectType, GraphQLID, GraphQLString, GraphQLSchema, GraphQLList } = require('graphql')
+const { GraphQLObjectType, GraphQLID, GraphQLString, GraphQLSchema, GraphQLList, GraphQLNonNull } = require('graphql')
 
 // Client Type - GraphQL Object Type
 const ClientType = new GraphQLObjectType({
@@ -38,6 +38,7 @@ const ProjectType = new GraphQLObjectType({
     })
 })
 
+// RootQuery is where we define the things that we can do with the GraphQL endpoint and the queries that can be built from the data in the DB (read in the CRUD fashion)
 const RootQuery = new GraphQLObjectType({
     name: 'RootQueryType',
     // This fields for the RootQuery is an object that returns queries
@@ -81,7 +82,36 @@ const RootQuery = new GraphQLObjectType({
     }
 })
 
+// Mutations are how we add things to the database, which we need to define so the GraphQL endpoint knows how to process the mutation (create, in the CRUD fashion)
+const mutation = new GraphQLObjectType({
+    name: 'Mutation',
+    fields: {
+        // The first mutation field is the addClient mutation, so we can add a client to the DB
+        addClient: {
+            // The type needs to be one of the defined types that we have created, in this case, ClientType
+            type: ClientType,
+            args: {
+                // In order to prevent the user from entering a null value or an empty value, we need to use the GraphQLNonNull function, which wraps the true object type, adding a rule to that entry
+                name: { type: GraphQLNonNull(GraphQLString) },
+                email: { type: GraphQLNonNull(GraphQLString) },
+                phone: { type: GraphQLNonNull(GraphQLString) },
+            },
+            // The resolve function creates a new client using the mongoose model by taking the args from the GraphQL query, which come from a form on the front-end
+            resolve(parent, args) {
+                const client = new Client({
+                    name: args.name,
+                    email: args.email,
+                    phone: args.phone,
+                })
+                // This will save the client, that was just defined above, to the DB
+                return client.save()
+            }
+        }
+    }
+})
+
 // In order to use the query, we need to export the schema
 module.exports = new GraphQLSchema({
-    query: RootQuery
+    query: RootQuery,
+    mutation
 })
