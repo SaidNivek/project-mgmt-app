@@ -11,6 +11,13 @@ const schema = require('./schema/schema')
 const port = process.env.PORT || 4000
 // Creating the app for things to actually start listening and happening with our code
 const app = express()
+// Need to import our connection to the mongoDB database
+const connectDB = require('./config/db')
+// Needed for colors 
+const colors = require('colors')
+
+// ~~~~~ Connect to Database  ~~~~~
+connectDB()
 
 // ~~~~~ ENDPOINTS ~~~~~
 // Define app.use so it knows the endpoint for our server
