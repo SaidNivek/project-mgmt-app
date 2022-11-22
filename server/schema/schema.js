@@ -3,7 +3,7 @@ const Project = require('../models/Project')
 const Client = require('../models/Client')
 
 // Bring in the things from graphql that we need to use and destructure them into their parts
-const { GraphQLObjectType, GraphQLID, GraphQLString, GraphQLSchema, GraphQLList, GraphQLNonNull } = require('graphql')
+const { GraphQLObjectType, GraphQLID, GraphQLString, GraphQLSchema, GraphQLList, GraphQLNonNull, GraphQLEnumType } = require('graphql')
 
 // Client Type - GraphQL Object Type
 const ClientType = new GraphQLObjectType({
@@ -118,7 +118,26 @@ const mutation = new GraphQLObjectType({
                 return Client.findByIdAndRemove(args.id)
             },
         },
-
+        // Add a project
+        addProject: {
+            type: ProjectType,
+            args: {
+                name: { type: GraphQLNonNull(GraphQLString) },
+                description: { type: GraphQLNonNull(GraphQLString) },
+                status: { 
+                    type: new GraphQLEnumType({
+                        name: 'ProjectStatus',
+                        values: {
+                            'new': { value: 'Not Started'},
+                            'progress': { value: 'In Progress'},
+                            'completed': { value: 'Completed'},
+                        }
+                    }),
+                    default: 'Not Started', 
+                },
+                clientId: { type: GraphQLNonNull(GraphQLID) },
+            },
+        }
     },
 })
 

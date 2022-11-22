@@ -11,9 +11,6 @@ const ProjectSchema = new mongoose.Schema({
         type: String,
         enum: ['Not Started', 'In Progress', 'Complete']
     },
-    phone: {
-        type: String,
-    },
     // This client ID will reference the Client schema that we have build and pull in the ID of the client
     clientId: {
         // This tells mongoose that we are looking for a schema type object ID
