@@ -159,7 +159,43 @@ const mutation = new GraphQLObjectType({
                 return Project.findByIdAndRemove(args.id)
             },
         },
-    },
+        // Update a Project
+        updateProject: {
+            type: ProjectType,
+            args: {
+                id: { type: GraphQLNonNull(GraphQLID) },
+                name: { type: GraphQLString },
+                description: { type: GraphQLString },
+                status: { 
+                    type: new GraphQLEnumType({
+                        // This name needs to be unique, so if we kept it PorjectStatus, it would throw an error
+                        // So we must change it to something else, in this case it is
+                        name: 'ProjectStatusUpdate',
+                        values: {
+                            'new': { value: 'Not Started'},
+                            'progress': { value: 'In Progress'},
+                            'completed': { value: 'Completed'},
+                        },
+                    }),
+                },
+            },
+            resolve(parent, args) {
+                // Will find the Project by the given ID, find it, and update it withthe information passed into args
+                return Project.findByIdAndUpdate(
+                    args.id, {
+                        // Use the $set function to change the fields that are in the Project within the database
+                        $set: {
+                            name: args.name,
+                            description: args.description,
+                            status: args.status,
+                        },
+                    },
+                    // If we use this update mutation and there is no project, then it will create a new project immediately
+                    {new: true}
+                )
+            }
+        },
+    }
 })
 
 // In order to use the query, we need to export the schema
