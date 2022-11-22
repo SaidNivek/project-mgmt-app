@@ -23,7 +23,7 @@ const ProjectType = new GraphQLObjectType({
     // 'fields' for the ProjectType is an anonymous function that returns an object
     fields: () => ({
         id: { type: GraphQLID },
-                name: { type: GraphQLString },
+        name: { type: GraphQLString },
         description: { type: GraphQLString },
         status: { type: GraphQLString },
         // The client is now a child of project, so we can query for information from the client in GtaphQL
