@@ -1,13 +1,22 @@
-
 import Header from './components/Header'
+import Clients from './components/Clients';
+import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client'
+
+// This will create the Apollo client, which will wrap the app so we can access all of the graphql data we need in all of the parts of the app that needs it
+const client = new ApolloClient({
+  uri: 'http://localhost:5000/graphql',
+  cache: new InMemoryCache(),
+})
 
 function App() {
   return (
     <>
-    <Header />
+    <ApolloProvider client={client} >
+      <Header />
       <div className="container">
-        <h1>Hello World</h1>
+        <Clients />
       </div>
+    </ApolloProvider>
     </>
   );
 }

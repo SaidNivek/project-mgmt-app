@@ -15,9 +15,15 @@ const app = express()
 const connectDB = require('./config/db')
 // Needed for colors 
 const colors = require('colors')
+// CORS needed for cross origin references
+const cors = require('cors')
 
 // ~~~~~ Connect to Database  ~~~~~
 connectDB()
+
+// ~~~~~ MIDDLEWARE ~~~~~
+// This is needed to allow the app to use the cors function, allowing it to look outside of itself for information/data/etc.
+app.use(cors())
 
 // ~~~~~ ENDPOINTS ~~~~~
 // Define app.use so it knows the endpoint for our server
