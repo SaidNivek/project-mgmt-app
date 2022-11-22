@@ -107,7 +107,7 @@ const mutation = new GraphQLObjectType({
                 return client.save()
             }
         },
-        // Delete client will delte it from the DB (Delete in CRUD fashion)
+        // Delete client will delete it from the DB (Delete in CRUD fashion)
         deleteClient: {
             type: ClientType,
             args: {
@@ -137,7 +137,28 @@ const mutation = new GraphQLObjectType({
                 },
                 clientId: { type: GraphQLNonNull(GraphQLID) },
             },
-        }
+            resolve(parent, args) {
+                const project = new Project ({
+                    name: args.name,
+                    description: args.description,
+                    status: args.status,
+                    clientId: args.clientId,
+                })
+
+                return project.save()
+            }
+        },
+        // Delete a Project
+        deleteProject: {
+            type: ProjectType,
+            args: {
+                id: { type: GraphQLNonNull(GraphQLID) },
+            },
+            resolve(parent, args) {
+                // Instead of finding and returning, we are now going to find the client item and remove it from the database
+                return Project.findByIdAndRemove(args.id)
+            },
+        },
     },
 })
 
