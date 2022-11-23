@@ -1,6 +1,7 @@
 import Header from './components/Header'
 import Clients from './components/Clients';
 import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client'
+import AddClientModal from './components/AddClientModal';
 
 // This code below will prevent the merge error from displaying in the console and handles the existing and incoming query merges when the mutations call for an update(cache) function
 const cache = new InMemoryCache({
@@ -34,6 +35,7 @@ function App() {
     <ApolloProvider client={client} >
       <Header />
       <div className="container">
+        <AddClientModal />
         <Clients />
       </div>
     </ApolloProvider>
