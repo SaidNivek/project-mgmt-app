@@ -1,8 +1,7 @@
 import Header from './components/Header'
-import Clients from './components/Clients';
-import Projects from './components/Projects';
 import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client'
-import AddClientModal from './components/AddClientModal';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import Home from './pages/Home';
 
 // This code below will prevent the merge error from displaying in the console and handles the existing and incoming query merges when the mutations call for an update(cache) function
 const cache = new InMemoryCache({
@@ -34,12 +33,14 @@ function App() {
   return (
     <>
     <ApolloProvider client={client} >
-      <Header />
-      <div className="container">
-        <AddClientModal />
-        <Projects />
-        <Clients />
-      </div>
+      <Router>
+        <Header />
+        <div className="container">
+          <Routes>
+            <Route path='/' element={<Home />} />
+          </Routes>
+        </div>
+      </Router>
     </ApolloProvider>
     </>
   );
