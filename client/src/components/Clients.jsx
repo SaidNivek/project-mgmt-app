@@ -1,4 +1,4 @@
-// gql is used to make the query, useQuery is needed to use the query, get the data, and any errors
+// useQuery is needed to use the query, get the data, and any errors
 import { useQuery } from '@apollo/client'
 import ClientRow from './ClientRow'
 import { GET_CLIENTS } from '../queries/clientQueries'
