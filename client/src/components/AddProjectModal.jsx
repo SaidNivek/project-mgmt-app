@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { FaList } from 'react-icons/fa'
 import { useMutation, useQuery } from '@apollo/client'
-import { GET_PROJECTS } from '../queries/clientQueries'
+import { GET_PROJECTS } from '../queries/projectQueries'
+import { GET_CLIENTS } from '../queries/clientQueries'
+import Spinner from './Spinner'
 
 export default function AddProjectModal() {
 
@@ -9,6 +11,9 @@ export default function AddProjectModal() {
     const [description, setDescription] = useState('')
     const [clientId, setClientId] = useState('')
     const [status, setStatus] = useState('new')
+
+    // Get clients for client select within the modal
+    const { loading, error, data } = useQuery(GET_CLIENTS)
 
     const onSubmit = (e) => {
         e.preventDefault()
@@ -23,9 +28,14 @@ export default function AddProjectModal() {
         setClientId('')
     }
 
+    if (loading) return <Spinner />
+    if (error) return 'Something went wrong'    
+
   return (
     <>
-        {/* <!-- Button trigger modal --> */}
+    {!loading && !error && (
+        <>
+                    {/* <!-- Button trigger modal --> */}
         <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProjectModal">
             <div className="d-flex align-items-center">
                 <FaList className="icon" />
@@ -75,6 +85,23 @@ export default function AddProjectModal() {
                             </select>
                         </div>
 
+                        <div className="mb-3">
+                            <label className="form-label">Client</label>
+                            <select 
+                                id="clientId" 
+                                className="form-select" 
+                                value={clientId} 
+                                onChange={(e) => setClientId(e.target.value)}
+                            >
+                                <option value=''>Select Client</option>
+                                { data.clients.map ((client) => (
+                                    <option key={client.id} value={client.id}>
+                                        {client.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+
                         <button className="btn btn-primary" type="submit" data-bs-dismiss="modal">
                             Submit
                         </button>
@@ -83,6 +110,8 @@ export default function AddProjectModal() {
             </div>
         </div>
         </div>
+        </>
+    )}
     </>
   )
 }
