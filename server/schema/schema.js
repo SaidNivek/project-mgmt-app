@@ -114,6 +114,16 @@ const mutation = new GraphQLObjectType({
                 id: { type: GraphQLNonNull(GraphQLID) },
             },
             resolve(parent, args) {
+                // To find and delete all projects relating to the client, we need to do the following steps
+                // Do a find of the Project model, passing in the client id
+                // The clientId is going to correlate to args.id, which is the Project model, in this case, so anywhere the clientId of the deleted Client matches the clientId of any existing projects
+                // Then, we will loop through each of the projects that have a matching clientId, we will remove those projects
+                Project.find({ clientId: args.id })
+                    .then((projects) => {
+                        projects.forEach(project => {
+                            project.remove()
+                        })
+                    })
                 // Instead of finding and returning, we are now going to find the client item and remove it from the database
                 return Client.findByIdAndRemove(args.id)
             },
