@@ -10,8 +10,8 @@ export default function AddProjectModal() {
 
     const [name, setName] = useState('')
     const [description, setDescription] = useState('')
-    const [clientId, setClientId] = useState('')
     const [status, setStatus] = useState('new')
+    const [clientId, setClientId] = useState('')
 
     // Set the addProject variable to useMutation, passing in the ADD_PROJECT mutation and the variables needed for the mutation to take place
     const [addProject] = useMutation(ADD_PROJECT, { 

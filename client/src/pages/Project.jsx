@@ -4,6 +4,7 @@ import { useQuery } from '@apollo/client'
 import { GET_PROJECT } from '../queries/projectQueries'
 import ClientInfo from '../components/ClientInfo'
 import DeleteProjectButton from '../components/DeleteProjectButton'
+import EditProjectForm from '../components/EditProjectForm'
 
 export default function Project() {
   // destructure the id of the project with useParams
@@ -28,6 +29,9 @@ export default function Project() {
           <p className="lead">{ data.project.status }</p>
 
           <ClientInfo client={ data.project.client } />
+          
+          {/* Bring in the prop of the entire project, because w emight need to edit any part of the project. */}
+          <EditProjectForm project={data.project} />
 
           <DeleteProjectButton projectId={data.project.id} />
         </div>
